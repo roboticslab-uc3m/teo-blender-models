@@ -13,3 +13,12 @@ The goal of this project is to transfer the movements made by a human, previousl
 - Install [Blender](https://www.blender.org/download/)
 - Add the mocap-tool addon [mocap.zip](https://github.com/jlsneto/blender-addons/releases/download/mocap-28x/mocap.zip) and activate it 
 - Open `teo.blend`
+
+### Instructions for use:
+To learn how to perform the matching steps between the Mocap skeleton and Teo's skeleton, you can consult the instructions [here](https://github.com/roboticslab-uc3m/teo-blender-models/blob/master/doc/teo-robot-control-instructions.md). 
+
+### Sample Videos:
+If you want to consult some demonstration videos, click [here](https://github.com/roboticslab-uc3m/teo-blender-models/blob/master/doc/teo-robot-control-videos.md). 
+
+## Status
+[![Issues](https://img.shields.io/github/issues/roboticslab-uc3m/teo-blender-models.svg?label=Issues)](https://github.com/roboticslab-uc3m/teo-blender-models/issues)
