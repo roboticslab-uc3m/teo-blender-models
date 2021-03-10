@@ -1,11 +1,12 @@
 # Sample Videos:
 
 
-### **Teo Robot Control: moving a Humanoid Robot using Blender**. Note: YARP features are not uploaded at the moment
+### **Teo Robot Control: moving a Humanoid Robot using Blender**
+Note: YARP features are not uploaded at the moment
 
 [![Watch the video](https://img.youtube.com/vi/XQgnWlUdTvU/maxresdefault.jpg)](https://youtu.be/XQgnWlUdTvU) 
 
-### **Teo Robot Control: How to transfer captured movements to the robot using Blender**.
+### **Teo Robot Control: How to transfer captured movements to the robot using Blender**
 
 [![Watch the video](https://img.youtube.com/vi/0t6ldkr0ICY/maxresdefault.jpg)](https://youtu.be/0t6ldkr0ICY) 
 
