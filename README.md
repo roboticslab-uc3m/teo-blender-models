@@ -8,11 +8,14 @@ The goal of this project is to transfer the movements made by a human, previousl
 - Blender files: [teo-blender-models/blender](https://github.com/roboticslab-uc3m/teo-blender-models/tree/master/blender)
 - Blender script: [teo-robot-control.py](https://github.com/roboticslab-uc3m/teo-blender-models/blob/master/src/python/teo-robot-control.py)
 - Blender addon: [Mocap Tools Blender 2.80](https://github.com/roboticslab-uc3m/mocap-tools/tree/master/blender)
+- App to launch a csv trajectory: [launchTrajectory](https://github.com/roboticslab-uc3m/teo-blender-models/blob/master/src/cpp/launchTrajectory.cpp)
 
 ### Installation: 
 - Install [Blender](https://www.blender.org/download/)
 - Add the mocap-tool addon [mocap.zip](https://github.com/jlsneto/blender-addons/releases/download/mocap-28x/mocap.zip) and activate it 
 - Open `teo.blend`
+- Make sure you've the most current version of `teo-robot-control.py` script loaded into the project 
+- To properly compile the app `launchTrajectory.cpp`, follow the installation instructions of [yarp-devices](https://github.com/roboticslab-uc3m/yarp-devices/blob/master/doc/yarp-devices-install.md) dependences.
 
 ### Instructions for use:
 To learn how to perform the matching steps between the Mocap skeleton and Teo's skeleton, you can consult the instructions [here](https://github.com/roboticslab-uc3m/teo-blender-models/blob/master/doc/teo-robot-control-instructions.md). 
