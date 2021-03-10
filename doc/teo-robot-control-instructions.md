@@ -15,7 +15,7 @@ These steps are indicative and require a minimum of handling with Blender.
 Note: we will probably not always achieve a successful result of the movement of Teo's skeleton relative to our mocap skeleton. This can be due to multiple reasons that must be observed and adjusted to make our trajectory as accurate as possible. If you have any questions or problems write an [issue](https://github.com/roboticslab-uc3m/teo-blender-models/issues). 
 
 ## Launch trajectory on the robot / simulator:
-Note: this application is based on [examplePositionDirect](https://github.com/roboticslab-uc3m/yarp-devices/blob/offline-ip-mode/examples/cpp/examplePositionDirect/examplePositionDirect.cpp), located in `offline-ip-mode` branch within [yarp-devices](https://github.com/roboticslab-uc3m/yarp-devices/tree/offline-ip-mode) to launch offline trajectories using the PT/PVT mode for the robot. 
+Note: this application is based on [examplePositionDirect](https://github.com/roboticslab-uc3m/yarp-devices/blob/offline-ip-mode/examples/cpp/examplePositionDirect/examplePositionDirect.cpp), located in `offline-ip-mode` branch within [yarp-devices](https://github.com/roboticslab-uc3m/yarp-devices/tree/offline-ip-mode) to launch offline trajectories using the PT/PVT mode for the robot. You can try some uploaded trajectories [here](https://drive.google.com/drive/folders/1DncztEjk7guPauoQXpRs-R0gQzFPd7zO?usp=sharing). 
 1. Copy the trajectory files in an easily locatable place. Example: `$ ~/trajectories/`
 2. Go to the directory where [launchTrayectory](https://github.com/roboticslab-uc3m/teo-blender-models/tree/master/src/cpp) application is located.
 3. Compile it
@@ -31,7 +31,3 @@ make
 ```bash
 ./launchTrajectory --robot /teo --csv ~/trajectories/various-arm-movements.csv --batch --period 10
 ```
-
- 
-
-
