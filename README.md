@@ -6,7 +6,7 @@ The goal of this project is to transfer the movements made by a human, previousl
 
 ### Components used in the project 
 - Blender files: [teo-blender-models/blender](https://github.com/roboticslab-uc3m/teo-blender-models/tree/master/blender)
-- Blender script: [teo-robot-control.py](https://github.com/roboticslab-uc3m/teo-blender-models/blob/master/scripts/python/teo-robot-control.py)
+- Blender script: [teo-robot-control.py](https://github.com/roboticslab-uc3m/teo-blender-models/blob/master/src/python/teo-robot-control.py)
 - Blender addon: [Mocap Tools Blender 2.80](https://github.com/roboticslab-uc3m/mocap-tools/tree/master/blender)
 
 ### Installation: 
