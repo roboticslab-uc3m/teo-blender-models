@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
 
     yarp::os::Property laoptions;
     laoptions.put("device","remote_controlboard");
+    laoptions.put("writeStrict", "on");
     laoptions.put("remote",robot+"/leftArm");
     laoptions.put("local","/test"+robot+"/leftArm");
 
@@ -121,6 +122,7 @@ int main(int argc, char *argv[])
 
     yarp::os::Property raoptions;
     raoptions.put("device","remote_controlboard");
+    raoptions.put("writeStrict", "on");
     raoptions.put("remote",robot+"/rightArm");
     raoptions.put("local","/test"+robot+"/rightArm");
 
@@ -164,6 +166,7 @@ int main(int argc, char *argv[])
 
     yarp::os::Property troptions;
     troptions.put("device","remote_controlboard");
+    troptions.put("writeStrict", "on");
     troptions.put("remote",robot+"/trunk");
     troptions.put("local","/test"+robot+"/trunk");
 
@@ -259,10 +262,10 @@ int main(int argc, char *argv[])
         raposd->setPositions(rapose.data());
         trposd->setPositions(trpose.data());
 
-        if (batch)
-            yarp::os::Time::delay(period * 0.0005); // -> period / 2
-        else
+        if(!batch)
+        {
             yarp::os::Time::delay(period * 0.001);
+        }
 
         csvrow.clear();
         lapose.clear();
