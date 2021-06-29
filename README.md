@@ -16,7 +16,7 @@ The goal of this project is to transfer the movements made by a human, previousl
 - Add the mocap-tool addon [mocap.zip](https://github.com/jlsneto/blender-addons/releases/download/mocap-28x/mocap.zip) and activate it 
 - Open `teo.blend`
 - Make sure you've the most current version of `teo-robot-control.py` script loaded into the project 
-- To properly compile the app `launchTrajectory.cpp`, follow the installation instructions of [yarp-devices](https://github.com/roboticslab-uc3m/yarp-devices/blob/master/doc/yarp-devices-install.md) dependences.
+- To properly compile the app `launchTrajectory.cpp`, install [Yarp](https://github.com/roboticslab-uc3m/installation-guides/blob/master/install-yarp.md).
 
 ### Instructions for use:
 To learn how to perform the matching steps between the Mocap skeleton and Teo's skeleton, you can consult the instructions [here](https://github.com/roboticslab-uc3m/teo-blender-models/blob/master/doc/teo-robot-control-instructions.md). 
