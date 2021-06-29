@@ -18,8 +18,6 @@
 #include <yarp/dev/IRemoteVariables.h>
 #include <yarp/dev/PolyDriver.h>
 
-#include <ColorDebug.h>
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -43,19 +41,19 @@ int main(int argc, char *argv[])
 
     if(!rf.check("csv"))
     {
-        CD_ERROR("csv file not found\n");
+        printf("[error] csv parameter not found. Please, indicate --csv file.csv\n");
         return false;
     }
 
     if (period <= 0)
     {
-        CD_ERROR("Illegal period: %d.\n", period);
+        printf("[error] Illegal period: %d.\n", period);
         return false;
     }
 
     if (ipMode != "pt" && ipMode != "pvt")
     {
-        CD_ERROR("Illegal ipMode: %s.\n", ipMode.c_str());
+        printf("[error] Illegal ipMode: %s.\n", ipMode.c_str());
         return false;
     }
 
@@ -63,7 +61,7 @@ int main(int argc, char *argv[])
 
     if (!yarp::os::Network::checkNetwork())
     {
-        CD_ERROR("Please start a yarp name server first.\n");
+        printf("[error] Please start a yarp name server first.\n");
         return 1;
     }
 
@@ -85,7 +83,7 @@ int main(int argc, char *argv[])
 
     ladev.open(laoptions);
     if(!ladev.isValid()) {
-      CD_ERROR("Robot device not available: left-arm\n");
+      printf("[error] Robot device not available: left-arm\n");
       ladev.close();
       yarp::os::Network::fini();
       return false;
@@ -101,13 +99,13 @@ int main(int argc, char *argv[])
 
     if (!ladev.isValid())
     {
-      CD_ERROR("Remote device not available: left-arm\n");
+      printf("[error] Remote device not available: left-arm\n");
       return 1;
     }
 
     if (!laok)
     {
-        CD_ERROR("Problems acquiring robot interfaces: left-arm\n");
+        printf("[error] Problems acquiring robot interfaces: left-arm\n");
         return 1;
     }
 
@@ -130,7 +128,7 @@ int main(int argc, char *argv[])
 
     radev.open(raoptions);
     if(!radev.isValid()) {
-      CD_ERROR("Robot device not available: right-arm\n");
+      printf("[error] Robot device not available: right-arm\n");
       radev.close();
       yarp::os::Network::fini();
       return false;
@@ -146,13 +144,13 @@ int main(int argc, char *argv[])
 
     if (!radev.isValid())
     {
-      CD_ERROR("Remote device not available: right-arm\n");
+      printf("[error] Remote device not available: right-arm\n");
       return 1;
     }
 
     if (!raok)
     {
-        CD_ERROR("Problems acquiring robot interfaces: right-arm\n");
+        printf("[error] Problems acquiring robot interfaces: right-arm\n");
         return 1;
     }
 
@@ -174,7 +172,7 @@ int main(int argc, char *argv[])
 
     trdev.open(troptions);
     if(!trdev.isValid()) {
-      CD_ERROR("Robot device not available: trunk\n");
+      printf("[error] Robot device not available: trunk\n");
       trdev.close();
       yarp::os::Network::fini();
       return false;
@@ -190,13 +188,13 @@ int main(int argc, char *argv[])
 
     if (!trdev.isValid())
     {
-      CD_ERROR("Remote device not available: trunk\n");
+      printf("[error] Remote device not available: trunk\n");
       return 1;
     }
 
     if (!raok)
     {
-        CD_ERROR("Problems acquiring robot interfaces: trunk\n");
+        printf("[error] Problems acquiring robot interfaces: trunk\n");
         return 1;
     }
 
@@ -216,7 +214,7 @@ int main(int argc, char *argv[])
          || !trvar->setRemoteVariable("all", {v}))
 
         {
-            CD_ERROR("Unable to set linear interpolation mode.\n");
+            printf("[error] Unable to set linear interpolation mode.\n");
             return 1;
         }
     }
@@ -273,7 +271,7 @@ int main(int argc, char *argv[])
         trpose.clear();
     }
 
-    CD_INFO_NO_HEADER("end\n");
+    printf("end\n");
 
     return 0;
 }

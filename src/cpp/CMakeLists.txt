@@ -9,5 +9,4 @@ add_executable(launchTrajectory launchTrajectory.cpp)
 
 target_link_libraries(launchTrajectory YARP::YARP_os
                                             YARP::YARP_init
-                                            YARP::YARP_dev
-                                            ROBOTICSLAB::ColorDebug)
+                                            YARP::YARP_dev)
