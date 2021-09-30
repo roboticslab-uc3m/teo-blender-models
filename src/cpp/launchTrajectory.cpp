@@ -36,8 +36,15 @@ int main(int argc, char *argv[])
     std::string robot = rf.check("robot",yarp::os::Value(DEFAULT_ROBOT),"name of robot to be used").asString();
     std::string csvPath = rf.check("csv",yarp::os::Value(DEFAULT_ROBOT),"path of csv file to be used").asString();
     int period = rf.check("period", yarp::os::Value(DEFAULT_POSD_PERIOD_MS), "posd command period [ms]").asInt32();
+    std::string extremities = rf.check("extremities",yarp::os::Value(DEFAULT_ROBOT),"extremities to be executed").asString();
     bool batch = rf.check("batch",  "stream interpolation data in batches");
     std::string ipMode = rf.check("ipMode", yarp::os::Value(DEFAULT_IP_MODE), "linear interpolation mode [pt|pvt]").asString();
+    
+    if(rf.check("help"))
+    {
+        printf("** Usage: ./launchTrajectory --robot /teoSim or /teo --csv salute.csv --period 10 --extremities upper or lower or all\n");
+        return false;  
+    }
 
     if(!rf.check("csv"))
     {
@@ -48,6 +55,12 @@ int main(int argc, char *argv[])
     if (period <= 0)
     {
         printf("[error] Illegal period: %d.\n", period);
+        return false;
+    }
+
+    if(!rf.check("extremities"))
+    {
+        printf("[error] extremities parameter not found. Please, indicate --extremities upper/lower/all \n");
         return false;
     }
 
@@ -198,6 +211,93 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // ------ LEFT LEG -------
+    yarp::dev::IControlMode * llmode;
+    yarp::dev::IEncoders * llencs;
+    yarp::dev::IPositionControl * llpos;
+    yarp::dev::IPositionDirect * llposd;
+    yarp::dev::IRemoteVariables * llvar;
+
+
+    yarp::os::Property lloptions;
+    lloptions.put("device","remote_controlboard");
+    lloptions.put("writeStrict", "on");
+    lloptions.put("remote",robot+"/leftLeg");
+    lloptions.put("local","/test"+robot+"/leftLeg");
+
+    yarp::dev::PolyDriver lldev(lloptions);
+
+    lldev.open(lloptions);
+    if(!lldev.isValid()) {
+      printf("[error] Robot device not available: left-leg\n");
+      lldev.close();
+      yarp::os::Network::fini();
+      return false;
+    }
+
+    bool llok = true;
+
+    llok &= lldev.view(llmode);
+    llok &= lldev.view(llencs);
+    llok &= lldev.view(llpos);
+    llok &= lldev.view(llposd);
+    llok &= !batch || lldev.view(llvar);
+
+    if (!lldev.isValid())
+    {
+      printf("[error] Remote device not available: left-leg\n");
+      return 1;
+    }
+
+    if (!llok)
+    {
+        printf("[error] Problems acquiring robot interfaces: left-leg\n");
+        return 1;
+    }
+
+    // ------ RIGHT LEG -------
+    yarp::dev::IControlMode * rlmode;
+    yarp::dev::IEncoders * rlencs;
+    yarp::dev::IPositionControl * rlpos;
+    yarp::dev::IPositionDirect * rlposd;
+    yarp::dev::IRemoteVariables * rlvar;
+
+
+    yarp::os::Property rloptions;
+    rloptions.put("device","remote_controlboard");
+    rloptions.put("writeStrict", "on");
+    rloptions.put("remote",robot+"/rightLeg");
+    rloptions.put("local","/test"+robot+"/rightLeg");
+
+    yarp::dev::PolyDriver rldev(rloptions);
+
+    rldev.open(rloptions);
+    if(!rldev.isValid()) {
+      printf("[error] Robot device not available: right-leg\n");
+      rldev.close();
+      yarp::os::Network::fini();
+      return false;
+    }
+
+    bool rlok = true;
+
+    rlok &= rldev.view(rlmode);
+    rlok &= rldev.view(rlencs);
+    rlok &= rldev.view(rlpos);
+    rlok &= rldev.view(rlposd);
+    rlok &= !batch || rldev.view(rlvar);
+
+    if (!rldev.isValid())
+    {
+      printf("[error] Remote device not available: right-leg\n");
+      return 1;
+    }
+
+    if (!rlok)
+    {
+        printf("[error] Problems acquiring robot interfaces: right-leg\n");
+        return 1;
+    }
 
     if (batch)
     {
@@ -211,7 +311,9 @@ int main(int argc, char *argv[])
 
         if (!lavar->setRemoteVariable("all", {v})
          || !ravar->setRemoteVariable("all", {v})
-         || !trvar->setRemoteVariable("all", {v}))
+         || !trvar->setRemoteVariable("all", {v})
+         || !llvar->setRemoteVariable("all", {v})
+         || !rlvar->setRemoteVariable("all", {v}))
 
         {
             printf("[error] Unable to set linear interpolation mode.\n");
@@ -234,9 +336,19 @@ int main(int argc, char *argv[])
     std::vector<int> trmodes(trjoints,VOCAB_CM_POSITION_DIRECT);
     trmode->setControlModes(trmodes.data());
 
+    int lljoints;
+    llencs->getAxes(&lljoints);
+    std::vector<int> llmodes(lljoints,VOCAB_CM_POSITION_DIRECT);
+    llmode->setControlModes(llmodes.data());
+
+    int rljoints;
+    rlencs->getAxes(&rljoints);
+    std::vector<int> rlmodes(rljoints,VOCAB_CM_POSITION_DIRECT);
+    rlmode->setControlModes(rlmodes.data());
+
     // Read CSV file and move
     std::ifstream ifstr;
-    std::vector<double> csvrow, lapose, rapose, trpose;
+    std::vector<double> csvrow, lapose, rapose, trpose, llpose, rlpose;
     ifstr.open(csvPath,std::ios::in);
 
     for (std::string line; std::getline(ifstr, line); )
@@ -252,13 +364,36 @@ int main(int argc, char *argv[])
             printf("%f ", csvrow[n]);
         printf("\n");
 
-        copy ( csvrow.begin(),    csvrow.begin()+ 6, std::back_inserter(lapose) );
-        copy ( csvrow.begin()+6,  csvrow.begin()+12, std::back_inserter(rapose) );
-        copy ( csvrow.begin()+12, csvrow.begin()+14, std::back_inserter(trpose) );
+        if (extremities == "upper"){
+            copy ( csvrow.begin(),    csvrow.begin()+ 6, std::back_inserter(lapose) );
+            copy ( csvrow.begin()+6,  csvrow.begin()+12, std::back_inserter(rapose) );
+            copy ( csvrow.begin()+12, csvrow.begin()+14, std::back_inserter(trpose) );
+            laposd->setPositions(lapose.data());
+            raposd->setPositions(rapose.data());
+            trposd->setPositions(trpose.data());
+        }
 
-        laposd->setPositions(lapose.data());
-        raposd->setPositions(rapose.data());
-        trposd->setPositions(trpose.data());
+        if (extremities == "lower"){
+            copy ( csvrow.begin(),    csvrow.begin()+ 6, std::back_inserter(llpose) );
+            copy ( csvrow.begin()+6,  csvrow.begin()+12, std::back_inserter(rlpose) );
+            llposd->setPositions(llpose.data());
+            rlposd->setPositions(rlpose.data());
+        }
+
+        if (extremities == "all"){
+            copy ( csvrow.begin(),    csvrow.begin()+ 6, std::back_inserter(lapose) );
+            copy ( csvrow.begin()+6,  csvrow.begin()+12, std::back_inserter(rapose) );
+            copy ( csvrow.begin()+12, csvrow.begin()+14, std::back_inserter(trpose) );
+            copy ( csvrow.begin()+14, csvrow.begin()+20, std::back_inserter(llpose) );
+            copy ( csvrow.begin()+20, csvrow.begin()+26, std::back_inserter(rlpose) );
+            laposd->setPositions(lapose.data());
+            raposd->setPositions(rapose.data());
+            trposd->setPositions(trpose.data());
+            llposd->setPositions(llpose.data());
+            rlposd->setPositions(rlpose.data());
+        }
+
+
 
         if(!batch)
         {
@@ -269,6 +404,8 @@ int main(int argc, char *argv[])
         lapose.clear();
         rapose.clear();
         trpose.clear();
+        llpose.clear();
+        rlpose.clear();
     }
 
     printf("end\n");
