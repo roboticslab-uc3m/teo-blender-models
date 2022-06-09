@@ -26,3 +26,7 @@ If you want to consult some demonstration videos, click [here](https://github.co
 
 ## Status
 [![Issues](https://img.shields.io/github/issues/roboticslab-uc3m/teo-blender-models.svg?label=Issues)](https://github.com/roboticslab-uc3m/teo-blender-models/issues)
+
+## Similar and Related Projects
+
+- [imontesino/blender-plotting](https://github.com/imontesino/blender-plotting)
