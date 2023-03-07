@@ -301,19 +301,18 @@ int main(int argc, char *argv[])
 
     if (batch)
     {
-        yarp::os::Property dict {{"enable", yarp::os::Value(true)},
-                                 {"mode", yarp::os::Value(ipMode)},
-                                 {"periodMs", yarp::os::Value(period)}};
+        yarp::os::Bottle b;
+        yarp::os::Bottle & bb = b.addList(); // additional nesting because of controlboardremapper
 
-        yarp::os::Value v;
-        v.asList()->addString("linInterp");
-        v.asList()->addList().fromString(dict.toString());
+        bb.addList() = {yarp::os::Value("ipMode"), yarp::os::Value(ipMode)};
+        bb.addList() = {yarp::os::Value("ipPeriodMs"), yarp::os::Value(period)};
+        bb.addList() = {yarp::os::Value("enableIp"), yarp::os::Value(true)}; // important: place this last
 
-        if (!lavar->setRemoteVariable("all", {v})
-         || !ravar->setRemoteVariable("all", {v})
-         || !trvar->setRemoteVariable("all", {v})
-         || !llvar->setRemoteVariable("all", {v})
-         || !rlvar->setRemoteVariable("all", {v}))
+        if (!lavar->setRemoteVariable("all", b)
+         || !ravar->setRemoteVariable("all", b)
+         || !trvar->setRemoteVariable("all", b)
+         || !llvar->setRemoteVariable("all", b)
+         || !rlvar->setRemoteVariable("all", b))
 
         {
             printf("[error] Unable to set linear interpolation mode.\n");
